@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../providers/providers.dart';
 import '../../config/app_theme.dart';
 import 'symptom_tracking_screen.dart';
@@ -45,6 +46,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -58,26 +60,26 @@ class _PatientHomeScreenState extends State<PatientHomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+            icon: const Icon(Icons.dashboard_outlined),
+            activeIcon: const Icon(Icons.dashboard),
+            label: l10n.dashboard,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.track_changes_outlined),
-            activeIcon: Icon(Icons.track_changes),
-            label: 'Track',
+            icon: const Icon(Icons.track_changes_outlined),
+            activeIcon: const Icon(Icons.track_changes),
+            label: l10n.track,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book_outlined),
-            activeIcon: Icon(Icons.book),
-            label: 'Journal',
+            icon: const Icon(Icons.book_outlined),
+            activeIcon: const Icon(Icons.book),
+            label: l10n.journal,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
+            icon: const Icon(Icons.person_outlined),
+            activeIcon: const Icon(Icons.person),
+            label: l10n.profile,
           ),
         ],
       ),
@@ -90,6 +92,7 @@ class _DashboardTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.watch<AuthProvider>();
     final symptomProvider = context.watch<SymptomProvider>();
     final moodProvider = context.watch<MoodProvider>();
@@ -101,32 +104,32 @@ class _DashboardTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hello, ${authProvider.user?.displayName ?? 'there'}!',
+              l10n.hello(authProvider.user?.displayName ?? 'there'),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              'How are you feeling today?',
+              l10n.howAreYouFeeling,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
-            _buildQuickActions(context),
+            _buildQuickActions(context, l10n),
             const SizedBox(height: 24),
-            _buildTodaysSummary(context, symptomProvider, moodProvider),
+            _buildTodaysSummary(context, l10n, symptomProvider, moodProvider),
             const SizedBox(height: 24),
-            _buildRecentActivity(context),
+            _buildRecentActivity(context, l10n),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildQuickActions(BuildContext context) {
+  Widget _buildQuickActions(BuildContext context, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quick Actions',
+          l10n.quickActions,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 12),
@@ -135,7 +138,7 @@ class _DashboardTab extends StatelessWidget {
             Expanded(
               child: _QuickActionCard(
                 icon: Icons.add_chart,
-                label: 'Log Symptoms',
+                label: l10n.logSymptoms,
                 color: AppTheme.primaryColor,
                 onTap: () => Navigator.push(
                   context,
@@ -149,7 +152,7 @@ class _DashboardTab extends StatelessWidget {
             Expanded(
               child: _QuickActionCard(
                 icon: Icons.medication,
-                label: 'Medications',
+                label: l10n.medications,
                 color: AppTheme.secondaryColor,
                 onTap: () => Navigator.push(
                   context,
@@ -167,7 +170,7 @@ class _DashboardTab extends StatelessWidget {
             Expanded(
               child: _QuickActionCard(
                 icon: Icons.restaurant,
-                label: 'Log Meal',
+                label: l10n.logMeal,
                 color: AppTheme.warningColor,
                 onTap: () => Navigator.push(
                   context,
@@ -181,7 +184,7 @@ class _DashboardTab extends StatelessWidget {
             Expanded(
               child: _QuickActionCard(
                 icon: Icons.mood,
-                label: 'Mood Check-in',
+                label: l10n.moodCheckin,
                 color: AppTheme.accentColor,
                 onTap: () => Navigator.push(
                   context,
@@ -199,6 +202,7 @@ class _DashboardTab extends StatelessWidget {
 
   Widget _buildTodaysSummary(
     BuildContext context,
+    AppLocalizations l10n,
     SymptomProvider symptomProvider,
     MoodProvider moodProvider,
   ) {
@@ -209,7 +213,7 @@ class _DashboardTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Today's Summary",
+              l10n.todaysSummary,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -218,10 +222,10 @@ class _DashboardTab extends StatelessWidget {
                 Expanded(
                   child: _SummaryItem(
                     icon: Icons.favorite,
-                    label: 'Symptoms',
+                    label: l10n.symptoms,
                     value: symptomProvider.todaysEntry != null
-                        ? 'Logged'
-                        : 'Not logged',
+                        ? l10n.logged
+                        : l10n.notLogged,
                     color: symptomProvider.todaysEntry != null
                         ? AppTheme.successColor
                         : AppTheme.textLight,
@@ -230,10 +234,10 @@ class _DashboardTab extends StatelessWidget {
                 Expanded(
                   child: _SummaryItem(
                     icon: Icons.mood,
-                    label: 'Mood',
+                    label: l10n.mood,
                     value: moodProvider.todaysEntry != null
                         ? moodProvider.todaysEntry!.moodLevel.name
-                        : 'Not logged',
+                        : l10n.notLogged,
                     color: moodProvider.todaysEntry != null
                         ? AppTheme.successColor
                         : AppTheme.textLight,
@@ -247,12 +251,12 @@ class _DashboardTab extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentActivity(BuildContext context) {
+  Widget _buildRecentActivity(BuildContext context, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent Activity',
+          l10n.recentActivity,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 12),
@@ -277,12 +281,12 @@ class _DashboardTab extends StatelessWidget {
                 ),
                 title: Text(
                   index == 0
-                      ? 'Symptom logged'
+                      ? l10n.symptomLogged
                       : index == 1
-                          ? 'Medication taken'
-                          : 'Meal logged',
+                          ? l10n.medicationTaken
+                          : l10n.mealLogged,
                 ),
-                subtitle: Text('Today'),
+                subtitle: Text(l10n.today),
                 trailing: const Icon(Icons.chevron_right),
               );
             },
@@ -375,6 +379,7 @@ class _TrackingTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -382,14 +387,14 @@ class _TrackingTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Track Your Health',
+              l10n.trackYourHealth,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 24),
             _TrackingOption(
               icon: Icons.add_chart,
-              title: 'Symptom Tracking',
-              description: 'Log pain, stool frequency, urgency, and fatigue',
+              title: l10n.symptomTracking,
+              description: l10n.symptomTrackingDesc,
               color: AppTheme.primaryColor,
               onTap: () => Navigator.push(
                 context,
@@ -400,8 +405,8 @@ class _TrackingTab extends StatelessWidget {
             ),
             _TrackingOption(
               icon: Icons.medication,
-              title: 'Medication Log',
-              description: 'Track doses, reminders, and side effects',
+              title: l10n.medicationLog,
+              description: l10n.medicationLogDesc,
               color: AppTheme.secondaryColor,
               onTap: () => Navigator.push(
                 context,
@@ -412,8 +417,8 @@ class _TrackingTab extends StatelessWidget {
             ),
             _TrackingOption(
               icon: Icons.restaurant,
-              title: 'Diet Tracking',
-              description: 'Log meals and identify food triggers',
+              title: l10n.dietTracking,
+              description: l10n.dietTrackingDesc,
               color: AppTheme.warningColor,
               onTap: () => Navigator.push(
                 context,
@@ -424,8 +429,8 @@ class _TrackingTab extends StatelessWidget {
             ),
             _TrackingOption(
               icon: Icons.mood,
-              title: 'Mood Check-in',
-              description: 'Track mood, stress, and sleep quality',
+              title: l10n.moodCheckinTitle,
+              description: l10n.moodCheckinDesc,
               color: AppTheme.accentColor,
               onTap: () => Navigator.push(
                 context,
@@ -436,8 +441,8 @@ class _TrackingTab extends StatelessWidget {
             ),
             _TrackingOption(
               icon: Icons.assignment,
-              title: 'SIBDQ Assessment',
-              description: 'Complete quality of life questionnaire',
+              title: l10n.sibdqAssessment,
+              description: l10n.sibdqAssessmentDesc,
               color: Colors.purple,
               onTap: () => Navigator.push(
                 context,
@@ -496,6 +501,7 @@ class _JournalTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -503,14 +509,14 @@ class _JournalTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your Journal',
+              l10n.yourJournal,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 24),
             _TrackingOption(
               icon: Icons.videocam,
-              title: 'Video Diary',
-              description: 'Record reflections and experiences',
+              title: l10n.videoDiary,
+              description: l10n.videoDiaryDesc,
               color: AppTheme.primaryColor,
               onTap: () => Navigator.push(
                 context,
@@ -521,8 +527,8 @@ class _JournalTab extends StatelessWidget {
             ),
             _TrackingOption(
               icon: Icons.edit_note,
-              title: 'Written Narratives',
-              description: 'Write about your journey and challenges',
+              title: l10n.writtenNarratives,
+              description: l10n.writtenNarrativesDesc,
               color: AppTheme.secondaryColor,
               onTap: () => Navigator.push(
                 context,
@@ -543,6 +549,7 @@ class _ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.watch<AuthProvider>();
 
     return SafeArea(
@@ -579,8 +586,7 @@ class _ProfileTab extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.settings_outlined),
-                    title: const Text('Settings'),
-                    subtitle: const Text('Language, privacy, and more'),
+                    title: Text(l10n.privacySettings),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => Navigator.push(
                       context,
@@ -592,21 +598,21 @@ class _ProfileTab extends StatelessWidget {
                   const Divider(height: 1),
                   ListTile(
                     leading: const Icon(Icons.notifications_outlined),
-                    title: const Text('Notifications'),
+                    title: Text(l10n.notifications),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {},
                   ),
                   const Divider(height: 1),
                   ListTile(
                     leading: const Icon(Icons.help_outline),
-                    title: const Text('Help & Support'),
+                    title: Text(l10n.helpSupport),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {},
                   ),
                   const Divider(height: 1),
                   ListTile(
                     leading: const Icon(Icons.info_outline),
-                    title: const Text('About'),
+                    title: Text(l10n.about),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {},
                   ),
@@ -619,7 +625,7 @@ class _ProfileTab extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: () => authProvider.signOut(),
                 icon: const Icon(Icons.logout),
-                label: const Text('Sign Out'),
+                label: Text(l10n.signOut),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppTheme.errorColor,
                   side: const BorderSide(color: AppTheme.errorColor),
