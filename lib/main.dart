@@ -8,6 +8,7 @@ import 'providers/providers.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/patient/patient_home_screen.dart';
 import 'screens/clinician/clinician_dashboard_screen.dart';
+import 'screens/onboarding/language_selection_screen.dart';
 import 'models/user_model.dart';
 
 void main() async {
@@ -61,10 +62,35 @@ class CrohnsExperienceApp extends StatelessWidget {
               Locale('ar'),
             ],
             locale: localeProvider.locale,
-            home: const AuthWrapper(),
+            home: const AppWrapper(),
           );
         },
       ),
+    );
+  }
+}
+
+class AppWrapper extends StatelessWidget {
+  const AppWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<LocaleProvider>(
+      builder: (context, localeProvider, _) {
+        if (localeProvider.isLoading) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        if (!localeProvider.hasSelectedLanguage) {
+          return const LanguageSelectionScreen();
+        }
+
+        return const AuthWrapper();
+      },
     );
   }
 }
