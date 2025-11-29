@@ -149,49 +149,49 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(
-                  child: _buildCollectionStatCard(
-                    context,
-                    l10n.symptomLogs,
-                    'symptom_logs',
-                    Icons.healing,
-                    Colors.orange,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildCollectionStatCard(
-                    context,
-                    l10n.medicationLogs,
-                    'medication_logs',
-                    Icons.medication,
-                    Colors.green,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildCollectionStatCard(
-                    context,
-                    l10n.dietLogs,
-                    'diet_logs',
-                    Icons.restaurant,
-                    Colors.blue,
-                  ),
-                ),
+                                Expanded(
+                                  child: _buildCollectionStatCard(
+                                    context,
+                                    l10n.symptomLogs,
+                                    'symptoms',
+                                    Icons.healing,
+                                    Colors.orange,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _buildCollectionStatCard(
+                                    context,
+                                    l10n.medicationLogs,
+                                    'medication_logs',
+                                    Icons.medication,
+                                    Colors.green,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: _buildCollectionStatCard(
+                                    context,
+                                    l10n.dietLogs,
+                                    'diet_entries',
+                                    Icons.restaurant,
+                                    Colors.blue,
+                                  ),
+                                ),
               ],
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(
-                  child: _buildCollectionStatCard(
-                    context,
-                    l10n.moodLogs,
-                    'mood_logs',
-                    Icons.mood,
-                    Colors.purple,
-                  ),
-                ),
+                                Expanded(
+                                  child: _buildCollectionStatCard(
+                                    context,
+                                    l10n.moodLogs,
+                                    'mood_entries',
+                                    Icons.mood,
+                                    Colors.purple,
+                                  ),
+                                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildCollectionStatCard(
