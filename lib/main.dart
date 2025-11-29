@@ -11,6 +11,7 @@ import 'screens/clinician/clinician_dashboard_screen.dart';
 import 'screens/admin/admin_home_screen.dart';
 import 'screens/onboarding/language_selection_screen.dart';
 import 'models/user_model.dart';
+import 'services/push_notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,8 +97,16 @@ class AppWrapper extends StatelessWidget {
   }
 }
 
-class AuthWrapper extends StatelessWidget {
+class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
+
+  @override
+  State<AuthWrapper> createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
+  final PushNotificationService _pushNotificationService = PushNotificationService();
+  bool _notificationsInitialized = false;
 
   @override
   Widget build(BuildContext context) {
@@ -112,19 +121,26 @@ class AuthWrapper extends StatelessWidget {
         }
 
         if (!authProvider.isAuthenticated) {
+          _notificationsInitialized = false;
           return const LoginScreen();
         }
 
-                if (authProvider.user?.role == UserRole.admin) {
-                  return const AdminHomeScreen();
-                } else if (authProvider.user?.role == UserRole.patient) {
-                  return const PatientHomeScreen();
-                } else if (authProvider.user?.role == UserRole.clinician ||
-                    authProvider.user?.role == UserRole.researcher) {
-                  return const ClinicianDashboardScreen();
-                }
+        // Initialize push notifications when user is authenticated
+        if (!_notificationsInitialized && authProvider.user != null) {
+          _notificationsInitialized = true;
+          _pushNotificationService.initialize(authProvider.user!.id);
+        }
 
-                return const LoginScreen();
+        if (authProvider.user?.role == UserRole.admin) {
+          return const AdminHomeScreen();
+        } else if (authProvider.user?.role == UserRole.patient) {
+          return const PatientHomeScreen();
+        } else if (authProvider.user?.role == UserRole.clinician ||
+            authProvider.user?.role == UserRole.researcher) {
+          return const ClinicianDashboardScreen();
+        }
+
+        return const LoginScreen();
       },
     );
   }
