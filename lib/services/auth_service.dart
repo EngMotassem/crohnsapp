@@ -10,11 +10,10 @@ class AuthService {
 
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  Future<UserModel?> signInWithEmailAndPassword(
-    String email,
-    String password,
-  ) async {
-    try {
+    Future<UserModel?> signInWithEmailAndPassword(
+      String email,
+      String password,
+    ) async {
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -24,18 +23,14 @@ class AuthService {
         return await getUserProfile(credential.user!.uid);
       }
       return null;
-    } on FirebaseAuthException {
-      rethrow;
     }
-  }
 
-  Future<UserModel?> signUpWithEmailAndPassword({
-    required String email,
-    required String password,
-    required String displayName,
-    required UserRole role,
-  }) async {
-    try {
+    Future<UserModel?> signUpWithEmailAndPassword({
+      required String email,
+      required String password,
+      required String displayName,
+      required UserRole role,
+    }) async {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -57,10 +52,7 @@ class AuthService {
         return user;
       }
       return null;
-    } on FirebaseAuthException {
-      rethrow;
     }
-  }
 
   Future<void> signOut() async {
     await _auth.signOut();

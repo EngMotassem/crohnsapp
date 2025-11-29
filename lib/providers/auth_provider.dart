@@ -173,24 +173,28 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _getAuthErrorMessage(String code) {
-    switch (code) {
-      case 'user-not-found':
-        return 'No user found with this email address';
-      case 'wrong-password':
-        return 'Incorrect password';
-      case 'email-already-in-use':
-        return 'An account already exists with this email';
-      case 'weak-password':
-        return 'Password is too weak';
-      case 'invalid-email':
-        return 'Invalid email address';
-      case 'user-disabled':
-        return 'This account has been disabled';
-      case 'too-many-requests':
-        return 'Too many attempts. Please try again later';
-      default:
-        return 'Authentication failed. Please try again';
+    String _getAuthErrorMessage(String code) {
+      switch (code) {
+        case 'user-not-found':
+          return 'No user found with this email address';
+        case 'wrong-password':
+          return 'Incorrect password';
+        case 'invalid-credential':
+          return 'Invalid email or password';
+        case 'INVALID_LOGIN_CREDENTIALS':
+          return 'Invalid email or password';
+        case 'email-already-in-use':
+          return 'An account already exists with this email';
+        case 'weak-password':
+          return 'Password is too weak';
+        case 'invalid-email':
+          return 'Invalid email address';
+        case 'user-disabled':
+          return 'This account has been disabled';
+        case 'too-many-requests':
+          return 'Too many attempts. Please try again later';
+        default:
+          return 'Authentication failed. Please try again';
+      }
     }
-  }
 }

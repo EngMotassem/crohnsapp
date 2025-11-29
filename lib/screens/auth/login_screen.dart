@@ -135,24 +135,51 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(l10n.forgotPassword),
                   ),
                 ),
-                const SizedBox(height: 24),
-                Consumer<AuthProvider>(
-                  builder: (context, authProvider, _) {
-                    return ElevatedButton(
-                      onPressed: authProvider.isLoading ? null : _handleLogin,
-                      child: authProvider.isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(l10n.signIn),
-                    );
-                  },
-                ),
+                                const SizedBox(height: 24),
+                                Consumer<AuthProvider>(
+                                  builder: (context, authProvider, _) {
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        if (authProvider.error != null)
+                                          Container(
+                                            padding: const EdgeInsets.all(12),
+                                            margin: const EdgeInsets.only(bottom: 16),
+                                            decoration: BoxDecoration(
+                                              color: AppTheme.errorColor.withOpacity(0.1),
+                                              borderRadius: BorderRadius.circular(8),
+                                              border: Border.all(color: AppTheme.errorColor),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.error_outline, color: AppTheme.errorColor),
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child: Text(
+                                                    authProvider.error!,
+                                                    style: TextStyle(color: AppTheme.errorColor),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ElevatedButton(
+                                          onPressed: authProvider.isLoading ? null : _handleLogin,
+                                          child: authProvider.isLoading
+                                              ? const SizedBox(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    color: Colors.white,
+                                                  ),
+                                                )
+                                              : Text(l10n.signIn),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
