@@ -109,6 +109,38 @@ class _AuthWrapperState extends State<AuthWrapper> {
   bool _notificationsInitialized = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Set up the notification callback to show in-app notifications
+    PushNotificationService.onNotificationReceived = _showNotification;
+  }
+
+  void _showNotification(String title, String body) {
+    if (!mounted) return;
+    
+    // Show a dialog for the notification
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.notifications, color: Colors.blue),
+            const SizedBox(width: 8),
+            Expanded(child: Text(title)),
+          ],
+        ),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
@@ -128,7 +160,11 @@ class _AuthWrapperState extends State<AuthWrapper> {
         // Initialize push notifications when user is authenticated
         if (!_notificationsInitialized && authProvider.user != null) {
           _notificationsInitialized = true;
-          _pushNotificationService.initialize(authProvider.user!.id);
+          final userRole = authProvider.user!.role.name;
+          _pushNotificationService.initialize(
+            authProvider.user!.id,
+            userRole: userRole,
+          );
         }
 
         if (authProvider.user?.role == UserRole.admin) {

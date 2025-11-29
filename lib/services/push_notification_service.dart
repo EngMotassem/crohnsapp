@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -9,12 +10,23 @@ class PushNotificationService {
   
   // Callback for showing notifications in the app
   static Function(String title, String body)? onNotificationReceived;
+  
+  // Stream subscription for in-app notifications
+  StreamSubscription<QuerySnapshot>? _notificationSubscription;
+  bool _isFirstSnapshot = true;
+  DateTime? _initTime;
 
-  Future<void> initialize(String? userId) async {
+  Future<void> initialize(String? userId, {String? userRole}) async {
     if (!kIsWeb) return;
 
     try {
       debugPrint('PushNotificationService: Starting initialization...');
+      
+      // Store initialization time to filter old notifications
+      _initTime = DateTime.now();
+      
+      // Start in-app notification listener (works without Cloud Functions)
+      _startInAppNotificationListener(userRole ?? 'patient');
       
       // Request permission for notifications
       final settings = await _messaging.requestPermission(
@@ -66,6 +78,66 @@ class PushNotificationService {
     } catch (e) {
       debugPrint('PushNotificationService: Error initializing: $e');
     }
+  }
+  
+  // In-app notification listener - works without Cloud Functions
+  void _startInAppNotificationListener(String userRole) {
+    debugPrint('PushNotificationService: Starting in-app notification listener for role: $userRole');
+    _isFirstSnapshot = true;
+    
+    _notificationSubscription = _firestore
+        .collection('notifications')
+        .orderBy('sentAt', descending: true)
+        .limit(10)
+        .snapshots()
+        .listen((snapshot) {
+      // Skip the first snapshot to avoid showing old notifications
+      if (_isFirstSnapshot) {
+        _isFirstSnapshot = false;
+        debugPrint('PushNotificationService: Skipping initial snapshot (${snapshot.docs.length} docs)');
+        return;
+      }
+      
+      for (final change in snapshot.docChanges) {
+        if (change.type != DocumentChangeType.added) continue;
+        
+        final data = change.doc.data();
+        if (data == null) continue;
+        
+        // Check if notification is new (created after initialization)
+        final sentAt = data['sentAt'] as Timestamp?;
+        if (sentAt != null && _initTime != null) {
+          if (sentAt.toDate().isBefore(_initTime!)) {
+            debugPrint('PushNotificationService: Skipping old notification');
+            continue;
+          }
+        }
+        
+        // Check target audience
+        final targetAudience = data['targetAudience'] as String? ?? 'all';
+        if (targetAudience != 'all' && targetAudience != userRole) {
+          debugPrint('PushNotificationService: Skipping notification not for this role');
+          continue;
+        }
+        
+        final title = data['title'] as String? ?? '';
+        final body = data['body'] as String? ?? '';
+        
+        if (title.isNotEmpty && body.isNotEmpty && onNotificationReceived != null) {
+          debugPrint('PushNotificationService: Showing in-app notification: $title');
+          onNotificationReceived!(title, body);
+        }
+      }
+    }, onError: (error) {
+      debugPrint('PushNotificationService: Error listening to notifications: $error');
+    });
+  }
+  
+  // Stop the in-app notification listener
+  void stopInAppNotificationListener() {
+    _notificationSubscription?.cancel();
+    _notificationSubscription = null;
+    _isFirstSnapshot = true;
   }
 
   Future<void> _saveTokenToFirestore(String userId, String token) async {
