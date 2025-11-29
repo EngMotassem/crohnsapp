@@ -1,0 +1,122 @@
+{
+  "@@locale": "ar",
+  "appTitle": "تجربة كرون",
+  "trackYourHealthJourney": "تتبع رحلتك الصحية",
+  
+  "dashboard": "الرئيسية",
+  "track": "التتبع",
+  "journal": "اليوميات",
+  "profile": "الملف الشخصي",
+  
+  "hello": "مرحباً، {name}!",
+  "@hello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "howAreYouFeeling": "كيف تشعر اليوم؟",
+  
+  "quickActions": "إجراءات سريعة",
+  "logSymptoms": "تسجيل الأعراض",
+  "medications": "الأدوية",
+  "logMeal": "تسجيل وجبة",
+  "moodCheckin": "تسجيل المزاج",
+  
+  "todaysSummary": "ملخص اليوم",
+  "symptoms": "الأعراض",
+  "mood": "المزاج",
+  "logged": "تم التسجيل",
+  "notLogged": "لم يتم التسجيل",
+  
+  "recentActivity": "النشاط الأخير",
+  "symptomLogged": "تم تسجيل الأعراض",
+  "medicationTaken": "تم أخذ الدواء",
+  "mealLogged": "تم تسجيل الوجبة",
+  "today": "اليوم",
+  
+  "trackYourHealth": "تتبع صحتك",
+  "symptomTracking": "تتبع الأعراض",
+  "symptomTrackingDesc": "سجل الألم، تكرار البراز، الإلحاح، والتعب",
+  "medicationLog": "سجل الأدوية",
+  "medicationLogDesc": "تتبع الجرعات، التذكيرات، والآثار الجانبية",
+  "dietTracking": "تتبع الغذاء",
+  "dietTrackingDesc": "سجل الوجبات وحدد محفزات الطعام",
+  "moodCheckinTitle": "تسجيل المزاج",
+  "moodCheckinDesc": "تتبع المزاج، التوتر، وجودة النوم",
+  "sibdqAssessment": "استبيان SIBDQ",
+  "sibdqAssessmentDesc": "أكمل استبيان جودة الحياة",
+  
+  "yourJournal": "يومياتك",
+  "videoDiary": "يوميات الفيديو",
+  "videoDiaryDesc": "سجل تأملاتك وتجاربك",
+  "writtenNarratives": "الكتابات",
+  "writtenNarrativesDesc": "اكتب عن رحلتك وتحدياتك",
+  
+  "privacySettings": "إعدادات الخصوصية",
+  "notifications": "الإشعارات",
+  "helpSupport": "المساعدة والدعم",
+  "about": "حول التطبيق",
+  "signOut": "تسجيل الخروج",
+  
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "signIn": "تسجيل الدخول",
+  "signUp": "إنشاء حساب",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "dontHaveAccount": "ليس لديك حساب؟",
+  "alreadyHaveAccount": "لديك حساب بالفعل؟",
+  "createAccount": "إنشاء حساب",
+  "fullName": "الاسم الكامل",
+  "confirmPassword": "تأكيد كلمة المرور",
+  
+  "noVideoDiariesYet": "لا توجد يوميات فيديو بعد",
+  "recordFirstVideoDiary": "سجل أول يوميات فيديو لك",
+  "record": "تسجيل",
+  "newVideoDiary": "يوميات فيديو جديدة",
+  "title": "العنوان",
+  "category": "الفئة",
+  "descriptionOptional": "الوصف (اختياري)",
+  "startRecording": "بدء التسجيل",
+  "stopRecording": "إيقاف التسجيل",
+  "chooseFromGallery": "اختر من المعرض",
+  "cameraAccessRequired": "الوصول للكاميرا يتطلب أذونات الجهاز",
+  "galleryAccessRequired": "الوصول للمعرض يتطلب أذونات الجهاز",
+  "recording": "جاري التسجيل...",
+  "saveVideo": "حفظ الفيديو",
+  "discardVideo": "تجاهل",
+  "videoSaved": "تم حفظ الفيديو بنجاح",
+  "videoDiscarded": "تم تجاهل الفيديو",
+  
+  "dailyReflection": "تأمل يومي",
+  "symptomUpdate": "تحديث الأعراض",
+  "treatmentExperience": "تجربة العلاج",
+  "emotionalWellbeing": "الصحة النفسية",
+  "other": "أخرى",
+  
+  "painLevel": "مستوى الألم",
+  "stoolFrequency": "تكرار البراز",
+  "urgency": "الإلحاح",
+  "fatigue": "التعب",
+  "additionalSymptoms": "أعراض إضافية",
+  "bloating": "الانتفاخ",
+  "nausea": "الغثيان",
+  "jointPain": "آلام المفاصل",
+  "skinIssues": "مشاكل الجلد",
+  "notes": "ملاحظات",
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  
+  "none": "لا يوجد",
+  "mild": "خفيف",
+  "moderate": "متوسط",
+  "severe": "شديد",
+  "verySevere": "شديد جداً",
+  
+  "pleaseLogIn": "الرجاء تسجيل الدخول",
+  "loading": "جاري التحميل...",
+  "error": "خطأ",
+  "success": "نجاح",
+  "retry": "إعادة المحاولة"
+}

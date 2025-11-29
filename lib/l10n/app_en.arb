@@ -1,0 +1,122 @@
+{
+  "@@locale": "en",
+  "appTitle": "Crohn's Experience",
+  "trackYourHealthJourney": "Track your health journey",
+  
+  "dashboard": "Dashboard",
+  "track": "Track",
+  "journal": "Journal",
+  "profile": "Profile",
+  
+  "hello": "Hello, {name}!",
+  "@hello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "howAreYouFeeling": "How are you feeling today?",
+  
+  "quickActions": "Quick Actions",
+  "logSymptoms": "Log Symptoms",
+  "medications": "Medications",
+  "logMeal": "Log Meal",
+  "moodCheckin": "Mood Check-in",
+  
+  "todaysSummary": "Today's Summary",
+  "symptoms": "Symptoms",
+  "mood": "Mood",
+  "logged": "Logged",
+  "notLogged": "Not logged",
+  
+  "recentActivity": "Recent Activity",
+  "symptomLogged": "Symptom logged",
+  "medicationTaken": "Medication taken",
+  "mealLogged": "Meal logged",
+  "today": "Today",
+  
+  "trackYourHealth": "Track Your Health",
+  "symptomTracking": "Symptom Tracking",
+  "symptomTrackingDesc": "Log pain, stool frequency, urgency, and fatigue",
+  "medicationLog": "Medication Log",
+  "medicationLogDesc": "Track doses, reminders, and side effects",
+  "dietTracking": "Diet Tracking",
+  "dietTrackingDesc": "Log meals and identify food triggers",
+  "moodCheckinTitle": "Mood Check-in",
+  "moodCheckinDesc": "Track mood, stress, and sleep quality",
+  "sibdqAssessment": "SIBDQ Assessment",
+  "sibdqAssessmentDesc": "Complete quality of life questionnaire",
+  
+  "yourJournal": "Your Journal",
+  "videoDiary": "Video Diary",
+  "videoDiaryDesc": "Record reflections and experiences",
+  "writtenNarratives": "Written Narratives",
+  "writtenNarrativesDesc": "Write about your journey and challenges",
+  
+  "privacySettings": "Privacy Settings",
+  "notifications": "Notifications",
+  "helpSupport": "Help & Support",
+  "about": "About",
+  "signOut": "Sign Out",
+  
+  "email": "Email",
+  "password": "Password",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "forgotPassword": "Forgot Password?",
+  "dontHaveAccount": "Don't have an account?",
+  "alreadyHaveAccount": "Already have an account?",
+  "createAccount": "Create Account",
+  "fullName": "Full Name",
+  "confirmPassword": "Confirm Password",
+  
+  "noVideoDiariesYet": "No video diaries yet",
+  "recordFirstVideoDiary": "Record your first video diary",
+  "record": "Record",
+  "newVideoDiary": "New Video Diary",
+  "title": "Title",
+  "category": "Category",
+  "descriptionOptional": "Description (optional)",
+  "startRecording": "Start Recording",
+  "stopRecording": "Stop Recording",
+  "chooseFromGallery": "Choose from Gallery",
+  "cameraAccessRequired": "Camera access requires device permissions",
+  "galleryAccessRequired": "Gallery access requires device permissions",
+  "recording": "Recording...",
+  "saveVideo": "Save Video",
+  "discardVideo": "Discard",
+  "videoSaved": "Video saved successfully",
+  "videoDiscarded": "Video discarded",
+  
+  "dailyReflection": "Daily Reflection",
+  "symptomUpdate": "Symptom Update",
+  "treatmentExperience": "Treatment Experience",
+  "emotionalWellbeing": "Emotional Wellbeing",
+  "other": "Other",
+  
+  "painLevel": "Pain Level",
+  "stoolFrequency": "Stool Frequency",
+  "urgency": "Urgency",
+  "fatigue": "Fatigue",
+  "additionalSymptoms": "Additional Symptoms",
+  "bloating": "Bloating",
+  "nausea": "Nausea",
+  "jointPain": "Joint Pain",
+  "skinIssues": "Skin Issues",
+  "notes": "Notes",
+  "save": "Save",
+  "cancel": "Cancel",
+  
+  "none": "None",
+  "mild": "Mild",
+  "moderate": "Moderate",
+  "severe": "Severe",
+  "verySevere": "Very Severe",
+  
+  "pleaseLogIn": "Please log in",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "retry": "Retry"
+}
