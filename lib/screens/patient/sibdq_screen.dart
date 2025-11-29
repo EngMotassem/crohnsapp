@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/sibdq_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/sibdq_service.dart';
@@ -21,9 +22,10 @@ class _SIBDQScreenState extends State<SIBDQScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SIBDQ Assessment'),
+        title: Text(l10n.sibdqAssessmentTitle),
       ),
       body: Column(
         children: [
@@ -38,7 +40,7 @@ class _SIBDQScreenState extends State<SIBDQScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Question ${_currentQuestion + 1} of ${sibdqQuestions.length}',
+                    l10n.questionProgress((_currentQuestion + 1).toString(), sibdqQuestions.length.toString()),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 8),
@@ -106,7 +108,7 @@ class _SIBDQScreenState extends State<SIBDQScreen> {
                           _currentQuestion--;
                         });
                       },
-                      child: const Text('Previous'),
+                      child: Text(l10n.previous),
                     ),
                   ),
                 if (_currentQuestion > 0) const SizedBox(width: 16),
@@ -125,8 +127,8 @@ class _SIBDQScreenState extends State<SIBDQScreen> {
                           },
                     child: Text(
                       _currentQuestion < sibdqQuestions.length - 1
-                          ? 'Next'
-                          : 'Submit',
+                          ? l10n.next
+                          : l10n.submit,
                     ),
                   ),
                 ),
@@ -183,17 +185,18 @@ class _SIBDQScreenState extends State<SIBDQScreen> {
   }
 
   void _showResultsDialog(SIBDQResponse response) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Assessment Complete'),
+        title: Text(l10n.assessmentComplete),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your SIBDQ Score',
+              l10n.yourSibdqScore,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
@@ -226,10 +229,10 @@ class _SIBDQScreenState extends State<SIBDQScreen> {
             const SizedBox(height: 16),
             const Divider(),
             const SizedBox(height: 8),
-            _buildDomainScore('Bowel Symptoms', response.bowelSymptomsDomain, 21),
-            _buildDomainScore('Systemic Symptoms', response.systemicSymptomsDomain, 14),
-            _buildDomainScore('Social Function', response.socialFunctionDomain, 7),
-            _buildDomainScore('Emotional Function', response.emotionalFunctionDomain, 28),
+            _buildDomainScore(l10n.bowelSymptoms, response.bowelSymptomsDomain, 21),
+            _buildDomainScore(l10n.systemicSymptoms, response.systemicSymptomsDomain, 14),
+            _buildDomainScore(l10n.socialFunction, response.socialFunctionDomain, 7),
+            _buildDomainScore(l10n.emotionalFunction, response.emotionalFunctionDomain, 28),
           ],
         ),
         actions: [
@@ -238,7 +241,7 @@ class _SIBDQScreenState extends State<SIBDQScreen> {
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            child: const Text('Done'),
+            child: Text(l10n.done),
           ),
         ],
       ),

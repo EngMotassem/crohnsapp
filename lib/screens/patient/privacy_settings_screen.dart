@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/user_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../config/app_theme.dart';
@@ -52,13 +53,14 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
   }
 
   Future<void> _saveSettings() async {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.read<AuthProvider>();
     await authProvider.updatePrivacySettings(_settings);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Privacy settings saved'),
+        SnackBar(
+          content: Text(l10n.privacySettingsSaved),
           backgroundColor: AppTheme.successColor,
         ),
       );
@@ -68,14 +70,15 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Privacy Settings'),
+        title: Text(l10n.privacySettingsTitle),
         actions: [
           if (_hasChanges)
             TextButton(
               onPressed: _saveSettings,
-              child: const Text('Save'),
+              child: Text(l10n.save),
             ),
         ],
       ),
@@ -95,25 +98,25 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
                         Icon(Icons.info_outline, color: AppTheme.primaryColor),
                         const SizedBox(width: 8),
                         Text(
-                          'About Privacy Levels',
+                          l10n.aboutPrivacyLevels,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
                     _buildPrivacyLevelInfo(
-                      'Private',
-                      'Only you can see this data',
+                      l10n.private,
+                      l10n.onlyYouCanSee,
                       Icons.lock,
                     ),
                     _buildPrivacyLevelInfo(
-                      'Anonymized for Research',
-                      'Researchers can access anonymized data',
+                      l10n.anonymizedForResearch,
+                      l10n.researchersCanAccess,
                       Icons.science,
                     ),
                     _buildPrivacyLevelInfo(
-                      'Shared with Clinician',
-                      'Your clinician can view this data',
+                      l10n.sharedWithClinician,
+                      l10n.clinicianCanView,
                       Icons.medical_services,
                     ),
                   ],
@@ -122,58 +125,65 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Data Privacy Settings',
+              l10n.dataPrivacySettings,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
             _buildPrivacySetting(
-              'Symptoms',
-              'Pain, stool frequency, urgency, fatigue',
+              l10n.symptomsPrivacy,
+              l10n.symptomsPrivacyDesc,
               Icons.healing,
               'symptoms',
               _settings.symptomsPrivacy,
+              l10n,
             ),
             _buildPrivacySetting(
-              'Medications',
-              'Medication logs and adherence',
+              l10n.medicationsPrivacy,
+              l10n.medicationsPrivacyDesc,
               Icons.medication,
               'medications',
               _settings.medicationsPrivacy,
+              l10n,
             ),
             _buildPrivacySetting(
-              'Diet',
-              'Food logs and trigger tracking',
+              l10n.dietPrivacy,
+              l10n.dietPrivacyDesc,
               Icons.restaurant,
               'diet',
               _settings.dietPrivacy,
+              l10n,
             ),
             _buildPrivacySetting(
-              'Mood',
-              'Mood check-ins and wellbeing',
+              l10n.moodPrivacy,
+              l10n.moodPrivacyDesc,
               Icons.mood,
               'mood',
               _settings.moodPrivacy,
+              l10n,
             ),
             _buildPrivacySetting(
-              'Video Diaries',
-              'Video recordings and reflections',
+              l10n.videoDiaryPrivacy,
+              l10n.videoDiaryPrivacyDesc,
               Icons.videocam,
               'videoDiary',
               _settings.videoDiaryPrivacy,
+              l10n,
             ),
             _buildPrivacySetting(
-              'Narratives',
-              'Written stories and experiences',
+              l10n.narrativesPrivacy,
+              l10n.narrativesPrivacyDesc,
               Icons.edit_note,
               'narratives',
               _settings.narrativesPrivacy,
+              l10n,
             ),
             _buildPrivacySetting(
-              'SIBDQ Assessments',
-              'Quality of life questionnaires',
+              l10n.sibdqPrivacy,
+              l10n.sibdqPrivacyDesc,
               Icons.assignment,
               'proms',
               _settings.promsPrivacy,
+              l10n,
             ),
             const SizedBox(height: 32),
             if (_hasChanges)
@@ -181,7 +191,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _saveSettings,
-                  child: const Text('Save Changes'),
+                  child: Text(l10n.saveChanges),
                 ),
               ),
           ],
@@ -222,6 +232,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
     IconData icon,
     String field,
     PrivacyLevel currentLevel,
+    AppLocalizations l10n,
   ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -253,21 +264,21 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
             ),
             const SizedBox(height: 12),
             SegmentedButton<PrivacyLevel>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: PrivacyLevel.private,
-                  label: Text('Private'),
-                  icon: Icon(Icons.lock),
+                  label: Text(l10n.private),
+                  icon: const Icon(Icons.lock),
                 ),
                 ButtonSegment(
                   value: PrivacyLevel.anonymizedForResearch,
-                  label: Text('Research'),
-                  icon: Icon(Icons.science),
+                  label: Text(l10n.research),
+                  icon: const Icon(Icons.science),
                 ),
                 ButtonSegment(
                   value: PrivacyLevel.sharedWithClinician,
-                  label: Text('Clinician'),
-                  icon: Icon(Icons.medical_services),
+                  label: Text(l10n.clinician),
+                  icon: const Icon(Icons.medical_services),
                 ),
               ],
               selected: {currentLevel},

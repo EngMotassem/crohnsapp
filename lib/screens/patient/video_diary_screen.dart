@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/video_diary_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/video_diary_service.dart';
 import '../../config/app_theme.dart';
+
+const int maxVideoSizeBytes = 50 * 1024 * 1024; // 50MB limit
 
 class VideoDiaryScreen extends StatefulWidget {
   const VideoDiaryScreen({super.key});
@@ -21,18 +24,19 @@ class _VideoDiaryScreenState extends State<VideoDiaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.watch<AuthProvider>();
     final userId = authProvider.user?.id;
 
     if (userId == null) {
-      return const Scaffold(
-        body: Center(child: Text('الرجاء تسجيل الدخول')),
+      return Scaffold(
+        body: Center(child: Text(l10n.pleaseLogIn)),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('يوميات الفيديو'),
+        title: Text(l10n.videoDiary),
       ),
       body: StreamBuilder<List<VideoDiary>>(
         stream: _videoDiaryService.getVideoDiariesStream(userId),
@@ -53,12 +57,12 @@ class _VideoDiaryScreenState extends State<VideoDiaryScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'لا توجد يوميات فيديو بعد',
+                    l10n.noVideoDiariesYet,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'سجل أول يوميات فيديو لك',
+                    l10n.recordFirstVideoDiary,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -80,7 +84,7 @@ class _VideoDiaryScreenState extends State<VideoDiaryScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showRecordDialog(context),
         icon: const Icon(Icons.videocam),
-        label: const Text('تسجيل'),
+        label: Text(l10n.record),
       ),
     );
   }
@@ -195,26 +199,28 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
     super.dispose();
   }
 
-  String _getCategoryName(VideoDiaryCategory category) {
+  String _getCategoryName(BuildContext context, VideoDiaryCategory category) {
+    final l10n = AppLocalizations.of(context)!;
     switch (category) {
       case VideoDiaryCategory.dailyReflection:
-        return 'تأمل يومي';
+        return l10n.dailyReflection;
       case VideoDiaryCategory.flareExperience:
-        return 'تجربة النوبة';
+        return l10n.flareExperience;
       case VideoDiaryCategory.copingStrategy:
-        return 'استراتيجية التأقلم';
+        return l10n.copingStrategy;
       case VideoDiaryCategory.emotionalState:
-        return 'الحالة النفسية';
+        return l10n.emotionalState;
       case VideoDiaryCategory.treatmentExperience:
-        return 'تجربة العلاج';
+        return l10n.treatmentExperience;
       case VideoDiaryCategory.milestone:
-        return 'إنجاز';
+        return l10n.milestone;
       case VideoDiaryCategory.other:
-        return 'أخرى';
+        return l10n.other;
     }
   }
 
   Future<void> _recordVideo() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final XFile? video = await _picker.pickVideo(
         source: ImageSource.camera,
@@ -223,6 +229,17 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
       
       if (video != null) {
         final bytes = await video.readAsBytes();
+        if (bytes.length > maxVideoSizeBytes) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.videoTooLarge('50')),
+                backgroundColor: AppTheme.errorColor,
+              ),
+            );
+          }
+          return;
+        }
         setState(() {
           _selectedVideo = video;
           _videoBytes = bytes;
@@ -232,7 +249,7 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('خطأ في الوصول للكاميرا: $e'),
+            content: Text('${l10n.errorAccessingCamera}: $e'),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -241,6 +258,7 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
   }
 
   Future<void> _pickVideoFromGallery() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final XFile? video = await _picker.pickVideo(
         source: ImageSource.gallery,
@@ -249,6 +267,17 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
       
       if (video != null) {
         final bytes = await video.readAsBytes();
+        if (bytes.length > maxVideoSizeBytes) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.videoTooLarge('50')),
+                backgroundColor: AppTheme.errorColor,
+              ),
+            );
+          }
+          return;
+        }
         setState(() {
           _selectedVideo = video;
           _videoBytes = bytes;
@@ -258,7 +287,7 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('خطأ في الوصول للمعرض: $e'),
+            content: Text('${l10n.errorAccessingGallery}: $e'),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -267,10 +296,11 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
   }
 
   Future<void> _saveVideo() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_titleController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('الرجاء إدخال عنوان'),
+        SnackBar(
+          content: Text(l10n.pleaseEnterTitle),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -279,8 +309,8 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
 
     if (_selectedVideo == null || _videoBytes == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('الرجاء تسجيل أو اختيار فيديو'),
+        SnackBar(
+          content: Text(l10n.pleaseSelectVideo),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -296,7 +326,7 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
       final userId = authProvider.user?.id;
 
       if (userId == null) {
-        throw Exception('المستخدم غير مسجل الدخول');
+        throw Exception(l10n.userNotLoggedIn);
       }
 
       await _videoDiaryService.createVideoDiary(
@@ -311,8 +341,8 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم حفظ الفيديو بنجاح'),
+          SnackBar(
+            content: Text(l10n.videoSaved),
             backgroundColor: AppTheme.successColor,
           ),
         );
@@ -321,7 +351,7 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('خطأ في حفظ الفيديو: $e'),
+            content: Text('${l10n.errorSavingVideo}: $e'),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -337,6 +367,7 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -350,30 +381,28 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'يوميات فيديو جديدة',
+              l10n.newVideoDiary,
               style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.right,
             ),
             const SizedBox(height: 24),
             TextField(
               controller: _titleController,
-              textDirection: TextDirection.rtl,
-              decoration: const InputDecoration(
-                labelText: 'العنوان',
-                prefixIcon: Icon(Icons.title),
+              decoration: InputDecoration(
+                labelText: l10n.title,
+                prefixIcon: const Icon(Icons.title),
               ),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<VideoDiaryCategory>(
               value: _category,
-              decoration: const InputDecoration(
-                labelText: 'الفئة',
-                prefixIcon: Icon(Icons.category),
+              decoration: InputDecoration(
+                labelText: l10n.category,
+                prefixIcon: const Icon(Icons.category),
               ),
               items: VideoDiaryCategory.values.map((cat) {
                 return DropdownMenuItem(
                   value: cat,
-                  child: Text(_getCategoryName(cat)),
+                  child: Text(_getCategoryName(context, cat)),
                 );
               }).toList(),
               onChanged: (v) => setState(() => _category = v!),
@@ -382,9 +411,8 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
             TextField(
               controller: _descriptionController,
               maxLines: 3,
-              textDirection: TextDirection.rtl,
-              decoration: const InputDecoration(
-                labelText: 'الوصف (اختياري)',
+              decoration: InputDecoration(
+                labelText: l10n.descriptionOptional,
                 alignLabelWithHint: true,
               ),
             ),
@@ -405,9 +433,9 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'تم اختيار الفيديو',
-                            style: TextStyle(
+                          Text(
+                            l10n.videoSelected,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: AppTheme.successColor,
                             ),
@@ -445,19 +473,19 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
                         ),
                       )
                     : const Icon(Icons.save),
-                label: Text(_isUploading ? 'جاري الحفظ...' : 'حفظ الفيديو'),
+                label: Text(_isUploading ? l10n.saving : l10n.saveVideo),
               ),
             ] else ...[
               ElevatedButton.icon(
                 onPressed: _recordVideo,
                 icon: const Icon(Icons.videocam),
-                label: const Text('تسجيل فيديو'),
+                label: Text(l10n.recordVideo),
               ),
               const SizedBox(height: 8),
               OutlinedButton.icon(
                 onPressed: _pickVideoFromGallery,
                 icon: const Icon(Icons.photo_library),
-                label: const Text('اختر من المعرض'),
+                label: Text(l10n.chooseFromGallery),
               ),
               if (kIsWeb) ...[
                 const SizedBox(height: 12),
@@ -473,9 +501,8 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'على الويب، يمكنك اختيار فيديو من جهازك. للتسجيل المباشر، استخدم التطبيق على الهاتف.',
+                          l10n.webVideoNote,
                           style: Theme.of(context).textTheme.bodySmall,
-                          textDirection: TextDirection.rtl,
                         ),
                       ),
                     ],

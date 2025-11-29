@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/diet_model.dart';
 import '../../providers/providers.dart';
 import '../../config/app_theme.dart';
@@ -44,10 +45,11 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
   }
 
   Future<void> _saveEntry() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_foods.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please add at least one food item'),
+        SnackBar(
+          content: Text(l10n.pleaseAddFood),
           backgroundColor: AppTheme.warningColor,
         ),
       );
@@ -75,8 +77,8 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Meal logged successfully'),
+        SnackBar(
+          content: Text(l10n.mealLoggedSuccess),
           backgroundColor: AppTheme.successColor,
         ),
       );
@@ -86,13 +88,14 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Log Meal'),
+        title: Text(l10n.logMeal),
         actions: [
           TextButton(
             onPressed: _saveEntry,
-            child: const Text('Save'),
+            child: Text(l10n.save),
           ),
         ],
       ),
@@ -102,7 +105,7 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Meal Type',
+              l10n.mealType,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
@@ -118,7 +121,7 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Foods',
+              l10n.foods,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
@@ -127,9 +130,9 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
                 Expanded(
                   child: TextField(
                     controller: _foodNameController,
-                    decoration: const InputDecoration(
-                      hintText: 'Add food item',
-                      prefixIcon: Icon(Icons.restaurant),
+                    decoration: InputDecoration(
+                      hintText: l10n.addFoodItem,
+                      prefixIcon: const Icon(Icons.restaurant),
                     ),
                     onSubmitted: (_) => _addFood(),
                   ),
@@ -164,7 +167,7 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
               ),
             const SizedBox(height: 24),
             Text(
-              'Water Intake (glasses)',
+              l10n.waterIntake,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
@@ -195,8 +198,8 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
             ),
             const SizedBox(height: 24),
             SwitchListTile(
-              title: const Text('Triggered Symptoms'),
-              subtitle: const Text('Did this meal cause any symptoms?'),
+              title: Text(l10n.triggeredSymptoms),
+              subtitle: Text(l10n.didMealCauseSymptoms),
               value: _triggeredSymptoms,
               onChanged: (v) => setState(() => _triggeredSymptoms = v),
               activeColor: AppTheme.errorColor,
@@ -205,20 +208,20 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
             TextField(
               controller: _notesController,
               maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Notes',
-                hintText: 'Any observations about this meal...',
+              decoration: InputDecoration(
+                labelText: l10n.notes,
+                hintText: l10n.anyObservationsAboutMeal,
                 alignLabelWithHint: true,
               ),
             ),
             const SizedBox(height: 24),
-            _buildKnownTriggers(),
+            _buildKnownTriggers(l10n),
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _saveEntry,
-                child: const Text('Save Meal'),
+                child: Text(l10n.saveMeal),
               ),
             ),
           ],
@@ -227,7 +230,7 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
     );
   }
 
-  Widget _buildKnownTriggers() {
+  Widget _buildKnownTriggers(AppLocalizations l10n) {
     return Consumer<DietProvider>(
       builder: (context, provider, _) {
         if (provider.triggers.isEmpty) return const SizedBox.shrink();
@@ -236,7 +239,7 @@ class _DietTrackingScreenState extends State<DietTrackingScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Known Triggers',
+              l10n.knownTriggers,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),

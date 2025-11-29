@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/narrative_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/narrative_service.dart';
@@ -32,23 +33,24 @@ class _NarrativeScreenState extends State<NarrativeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.watch<AuthProvider>();
     final userId = authProvider.user?.id;
 
     if (userId == null) {
-      return const Scaffold(
-        body: Center(child: Text('Please log in')),
+      return Scaffold(
+        body: Center(child: Text(l10n.pleaseLogIn)),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Narratives'),
+        title: Text(l10n.narratives),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Published'),
-            Tab(text: 'Drafts'),
+          tabs: [
+            Tab(text: l10n.published),
+            Tab(text: l10n.drafts),
           ],
         ),
       ),
@@ -57,18 +59,18 @@ class _NarrativeScreenState extends State<NarrativeScreen>
         children: [
           _NarrativeList(
             stream: _narrativeService.getNarrativesStream(userId),
-            emptyMessage: 'No narratives yet',
+            emptyMessage: l10n.noNarrativesYet,
           ),
           _NarrativeList(
             stream: _narrativeService.getDraftsStream(userId),
-            emptyMessage: 'No drafts',
+            emptyMessage: l10n.noDrafts,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openEditor(context),
         icon: const Icon(Icons.edit),
-        label: const Text('Write'),
+        label: Text(l10n.write),
       ),
     );
   }
@@ -142,6 +144,7 @@ class _NarrativeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -189,9 +192,9 @@ class _NarrativeCard extends StatelessWidget {
                         color: AppTheme.warningColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text(
-                        'Draft',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.draft,
+                        style: const TextStyle(
                           fontSize: 12,
                           color: AppTheme.warningColor,
                         ),
@@ -221,7 +224,7 @@ class _NarrativeCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    '${narrative.wordCount} words',
+                    '${narrative.wordCount} ${l10n.words}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const Spacer(),
@@ -285,9 +288,10 @@ class _NarrativeEditorScreenState extends State<_NarrativeEditorScreen> {
   }
 
   Future<void> _save({bool asDraft = true}) async {
+    final l10n = AppLocalizations.of(context)!;
     if (_titleController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a title')),
+        SnackBar(content: Text(l10n.pleaseEnterTitleNarrative)),
       );
       return;
     }
@@ -322,7 +326,7 @@ class _NarrativeEditorScreenState extends State<_NarrativeEditorScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(asDraft ? 'Draft saved' : 'Narrative published'),
+            content: Text(asDraft ? l10n.draftSaved : l10n.narrativePublished),
             backgroundColor: AppTheme.successColor,
           ),
         );
@@ -332,7 +336,7 @@ class _NarrativeEditorScreenState extends State<_NarrativeEditorScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text('${l10n.error}: $e'),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -344,17 +348,18 @@ class _NarrativeEditorScreenState extends State<_NarrativeEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.narrative != null ? 'Edit Narrative' : 'New Narrative'),
+        title: Text(widget.narrative != null ? l10n.editNarrative : l10n.newNarrative),
         actions: [
           TextButton(
             onPressed: _isSaving ? null : () => _save(asDraft: true),
-            child: const Text('Save Draft'),
+            child: Text(l10n.saveDraft),
           ),
           TextButton(
             onPressed: _isSaving ? null : () => _save(asDraft: false),
-            child: const Text('Publish'),
+            child: Text(l10n.publish),
           ),
         ],
       ),
@@ -366,17 +371,17 @@ class _NarrativeEditorScreenState extends State<_NarrativeEditorScreen> {
             TextField(
               controller: _titleController,
               style: Theme.of(context).textTheme.headlineSmall,
-              decoration: const InputDecoration(
-                hintText: 'Title',
+              decoration: InputDecoration(
+                hintText: l10n.title,
                 border: InputBorder.none,
               ),
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<NarrativeCategory>(
               value: _category,
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.category,
+                border: const OutlineInputBorder(),
               ),
               items: NarrativeCategory.values.map((cat) {
                 return DropdownMenuItem(
@@ -392,8 +397,8 @@ class _NarrativeEditorScreenState extends State<_NarrativeEditorScreen> {
               maxLines: null,
               minLines: 15,
               onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
-                hintText: 'Write your story...',
+              decoration: InputDecoration(
+                hintText: l10n.writeYourStory,
                 border: InputBorder.none,
               ),
             ),
@@ -413,7 +418,7 @@ class _NarrativeEditorScreenState extends State<_NarrativeEditorScreen> {
             Icon(Icons.article, size: 16, color: AppTheme.textLight),
             const SizedBox(width: 4),
             Text(
-              '$_wordCount words',
+              '$_wordCount ${l10n.words}',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

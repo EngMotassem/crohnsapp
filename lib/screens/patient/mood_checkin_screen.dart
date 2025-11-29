@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/mood_model.dart';
 import '../../providers/providers.dart';
 import '../../config/app_theme.dart';
@@ -24,18 +25,20 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
   final List<String> _copingStrategies = [];
   final _notesController = TextEditingController();
 
-  final List<String> _availableCopingStrategies = [
-    'Exercise',
-    'Meditation',
-    'Deep breathing',
-    'Talking to someone',
-    'Reading',
-    'Music',
-    'Rest',
-    'Journaling',
-    'Nature walk',
-    'Hobby',
-  ];
+  List<String> _getAvailableCopingStrategies(AppLocalizations l10n) {
+    return [
+      l10n.exercise,
+      l10n.meditation,
+      l10n.deepBreathing,
+      l10n.talkingToSomeone,
+      l10n.reading,
+      l10n.music,
+      l10n.rest,
+      l10n.journaling,
+      l10n.natureWalk,
+      l10n.hobby,
+    ];
+  }
 
   @override
   void dispose() {
@@ -44,6 +47,7 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
   }
 
   Future<void> _saveEntry() async {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.read<AuthProvider>();
     final moodProvider = context.read<MoodProvider>();
     final userId = authProvider.user?.id;
@@ -70,8 +74,8 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Mood check-in saved'),
+        SnackBar(
+          content: Text(l10n.moodCheckinSaved),
           backgroundColor: AppTheme.successColor,
         ),
       );
@@ -81,13 +85,14 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mood Check-in'),
+        title: Text(l10n.moodCheckin),
         actions: [
           TextButton(
             onPressed: _saveEntry,
-            child: const Text('Save'),
+            child: Text(l10n.save),
           ),
         ],
       ),
@@ -97,28 +102,28 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'How are you feeling?',
+              l10n.howAreYouFeelingQuestion,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
             _buildMoodSelector(),
             const SizedBox(height: 24),
             Text(
-              'Stress Level',
+              l10n.stressLevel,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             _buildStressSelector(),
             const SizedBox(height: 24),
             Text(
-              'Sleep Quality',
+              l10n.sleepQuality,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             _buildSleepQualitySelector(),
             const SizedBox(height: 16),
             Text(
-              'Hours of Sleep: ${_sleepHours.toStringAsFixed(1)}',
+              '${l10n.hoursOfSleep}: ${_sleepHours.toStringAsFixed(1)}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Slider(
@@ -130,37 +135,37 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
             ),
             const SizedBox(height: 24),
             _buildSliderSection(
-              title: 'Anxiety Level',
+              title: l10n.anxietyLevel,
               value: _anxietyLevel,
               onChanged: (v) => setState(() => _anxietyLevel = v.round()),
             ),
             _buildSliderSection(
-              title: 'Depression Level',
+              title: l10n.depressionLevel,
               value: _depressionLevel,
               onChanged: (v) => setState(() => _depressionLevel = v.round()),
             ),
             const SizedBox(height: 16),
             SwitchListTile(
-              title: const Text('Feeling Isolated'),
+              title: Text(l10n.feelingIsolated),
               value: _feelingIsolated,
               onChanged: (v) => setState(() => _feelingIsolated = v),
             ),
             SwitchListTile(
-              title: const Text('Impact on Daily Life'),
-              subtitle: const Text('Is your condition affecting daily activities?'),
+              title: Text(l10n.impactOnDailyLife),
+              subtitle: Text(l10n.isConditionAffecting),
               value: _impactOnDailyLife,
               onChanged: (v) => setState(() => _impactOnDailyLife = v),
             ),
             const SizedBox(height: 24),
             Text(
-              'Coping Strategies Used',
+              l10n.copingStrategiesUsed,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: _availableCopingStrategies.map((strategy) {
+              children: _getAvailableCopingStrategies(l10n).map((strategy) {
                 final isSelected = _copingStrategies.contains(strategy);
                 return FilterChip(
                   label: Text(strategy),
@@ -181,9 +186,9 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
             TextField(
               controller: _notesController,
               maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: 'Additional Notes',
-                hintText: 'How are you coping today?',
+              decoration: InputDecoration(
+                labelText: l10n.additionalNotes,
+                hintText: l10n.howAreYouCoping,
                 alignLabelWithHint: true,
               ),
             ),
@@ -192,7 +197,7 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _saveEntry,
-                child: const Text('Save Check-in'),
+                child: Text(l10n.saveCheckin),
               ),
             ),
           ],

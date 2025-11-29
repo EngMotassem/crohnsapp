@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/symptom_model.dart';
 import '../../providers/providers.dart';
 import '../../config/app_theme.dart';
@@ -35,6 +36,7 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
   }
 
   Future<void> _saveEntry() async {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.read<AuthProvider>();
     final symptomProvider = context.read<SymptomProvider>();
     final userId = authProvider.user?.id;
@@ -65,8 +67,8 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Symptoms logged successfully'),
+        SnackBar(
+          content: Text(l10n.symptomsLoggedSuccess),
           backgroundColor: AppTheme.successColor,
         ),
       );
@@ -74,7 +76,7 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(symptomProvider.error ?? 'Failed to save'),
+          content: Text(symptomProvider.error ?? l10n.failedToSave),
           backgroundColor: AppTheme.errorColor,
         ),
       );
@@ -83,13 +85,14 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Log Symptoms'),
+        title: Text(l10n.logSymptoms),
         actions: [
           TextButton(
             onPressed: _saveEntry,
-            child: const Text('Save'),
+            child: Text(l10n.save),
           ),
         ],
       ),
@@ -99,33 +102,37 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSliderSection(
-              title: 'Pain Level',
+              title: l10n.painLevel,
               value: _painLevel,
               onChanged: (v) => setState(() => _painLevel = v.round()),
               icon: Icons.healing,
+              l10n: l10n,
             ),
             _buildSliderSection(
-              title: 'Stool Frequency (times today)',
+              title: l10n.stoolFrequencyTimesToday,
               value: _stoolFrequency,
               max: 20,
               onChanged: (v) => setState(() => _stoolFrequency = v.round()),
               icon: Icons.repeat,
+              l10n: l10n,
             ),
             _buildSliderSection(
-              title: 'Urgency Level',
+              title: l10n.urgencyLevel,
               value: _urgencyLevel,
               onChanged: (v) => setState(() => _urgencyLevel = v.round()),
               icon: Icons.warning_amber,
+              l10n: l10n,
             ),
             _buildSliderSection(
-              title: 'Fatigue Level',
+              title: l10n.fatigueLevel,
               value: _fatigueLevel,
               onChanged: (v) => setState(() => _fatigueLevel = v.round()),
               icon: Icons.battery_alert,
+              l10n: l10n,
             ),
             const SizedBox(height: 24),
             Text(
-              'Additional Symptoms',
+              l10n.additionalSymptoms,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 12),
@@ -133,28 +140,28 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
               spacing: 8,
               runSpacing: 8,
               children: [
-                _buildSymptomChip('Blood in stool', _hasBlood,
+                _buildSymptomChip(l10n.bloodInStool, _hasBlood,
                     (v) => setState(() => _hasBlood = v)),
                 _buildSymptomChip(
-                    'Mucus', _hasMucus, (v) => setState(() => _hasMucus = v)),
+                    l10n.mucus, _hasMucus, (v) => setState(() => _hasMucus = v)),
                 _buildSymptomChip(
-                    'Nausea', _hasNausea, (v) => setState(() => _hasNausea = v)),
-                _buildSymptomChip('Vomiting', _hasVomiting,
+                    l10n.nausea, _hasNausea, (v) => setState(() => _hasNausea = v)),
+                _buildSymptomChip(l10n.vomiting, _hasVomiting,
                     (v) => setState(() => _hasVomiting = v)),
                 _buildSymptomChip(
-                    'Fever', _hasFever, (v) => setState(() => _hasFever = v)),
-                _buildSymptomChip('Joint pain', _hasJointPain,
+                    l10n.fever, _hasFever, (v) => setState(() => _hasFever = v)),
+                _buildSymptomChip(l10n.jointPain, _hasJointPain,
                     (v) => setState(() => _hasJointPain = v)),
-                _buildSymptomChip('Skin issues', _hasSkinIssues,
+                _buildSymptomChip(l10n.skinIssues, _hasSkinIssues,
                     (v) => setState(() => _hasSkinIssues = v)),
-                _buildSymptomChip('Eye issues', _hasEyeIssues,
+                _buildSymptomChip(l10n.eyeIssues, _hasEyeIssues,
                     (v) => setState(() => _hasEyeIssues = v)),
               ],
             ),
             const SizedBox(height: 24),
             SwitchListTile(
-              title: const Text('Mark as Flare'),
-              subtitle: const Text('Is this a flare-up episode?'),
+              title: Text(l10n.markAsFlare),
+              subtitle: Text(l10n.isThisFlareUp),
               value: _isFlare,
               onChanged: (v) => setState(() => _isFlare = v),
               activeColor: AppTheme.errorColor,
@@ -163,9 +170,9 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
             TextField(
               controller: _notesController,
               maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: 'Additional Notes',
-                hintText: 'Any other symptoms or observations...',
+              decoration: InputDecoration(
+                labelText: l10n.additionalNotes,
+                hintText: l10n.anyOtherSymptoms,
                 alignLabelWithHint: true,
               ),
             ),
@@ -185,7 +192,7 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text('Save Symptoms'),
+                        : Text(l10n.saveSymptoms),
                   );
                 },
               ),
@@ -201,6 +208,7 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
     required int value,
     required ValueChanged<double> onChanged,
     required IconData icon,
+    required AppLocalizations l10n,
     int max = 10,
   }) {
     return Card(
@@ -214,8 +222,7 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
               children: [
                 Icon(icon, color: AppTheme.primaryColor),
                 const SizedBox(width: 8),
-                Text(title, style: Theme.of(context).textTheme.titleMedium),
-                const Spacer(),
+                Expanded(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -243,8 +250,8 @@ class _SymptomTrackingScreenState extends State<SymptomTrackingScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('None', style: Theme.of(context).textTheme.bodySmall),
-                Text('Severe', style: Theme.of(context).textTheme.bodySmall),
+                Text(l10n.noneSeverity, style: Theme.of(context).textTheme.bodySmall),
+                Text(l10n.severeSeverity, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/medication_model.dart';
 import '../../providers/providers.dart';
 import '../../config/app_theme.dart';
@@ -10,9 +11,10 @@ class MedicationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Medications'),
+        title: Text(l10n.medications),
       ),
       body: Consumer<MedicationProvider>(
         builder: (context, provider, _) {
@@ -28,12 +30,12 @@ class MedicationScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No medications added',
+                    l10n.noMedicationsAdded,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Add your medications to track adherence',
+                    l10n.addMedicationsToTrack,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -72,14 +74,14 @@ class MedicationScreen extends StatelessWidget {
                     '${medication.dosage} ${medication.unit} - ${medication.frequency.name}',
                   ),
                   trailing: isLogged
-                      ? const Chip(
-                          label: Text('Taken'),
+                      ? Chip(
+                          label: Text(l10n.taken),
                           backgroundColor: AppTheme.successColor,
-                          labelStyle: TextStyle(color: Colors.white),
+                          labelStyle: const TextStyle(color: Colors.white),
                         )
                       : ElevatedButton(
                           onPressed: () => _logMedication(context, medication),
-                          child: const Text('Take'),
+                          child: Text(l10n.take),
                         ),
                 ),
               );
@@ -90,12 +92,13 @@ class MedicationScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddMedicationDialog(context),
         icon: const Icon(Icons.add),
-        label: const Text('Add Medication'),
+        label: Text(l10n.addMedication),
       ),
     );
   }
 
   void _logMedication(BuildContext context, Medication medication) async {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.read<AuthProvider>();
     final medicationProvider = context.read<MedicationProvider>();
     final userId = authProvider.user?.id;
@@ -114,8 +117,8 @@ class MedicationScreen extends StatelessWidget {
 
     if (success && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Medication logged'),
+        SnackBar(
+          content: Text(l10n.medicationLogged),
           backgroundColor: AppTheme.successColor,
         ),
       );
@@ -155,6 +158,7 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
   }
 
   Future<void> _saveMedication() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     final authProvider = context.read<AuthProvider>();
@@ -179,8 +183,8 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
     if (success && mounted) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Medication added'),
+        SnackBar(
+          content: Text(l10n.medicationAdded),
           backgroundColor: AppTheme.successColor,
         ),
       );
@@ -189,6 +193,7 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -204,18 +209,18 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Add Medication',
+                l10n.addMedication,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 24),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Medication Name',
-                  prefixIcon: Icon(Icons.medication),
+                decoration: InputDecoration(
+                  labelText: l10n.medicationName,
+                  prefixIcon: const Icon(Icons.medication),
                 ),
                 validator: (v) =>
-                    v?.isEmpty ?? true ? 'Please enter a name' : null,
+                    v?.isEmpty ?? true ? l10n.pleaseEnterName : null,
               ),
               const SizedBox(height: 16),
               Row(
@@ -223,23 +228,23 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
                   Expanded(
                     child: TextFormField(
                       controller: _dosageController,
-                      decoration: const InputDecoration(
-                        labelText: 'Dosage',
+                      decoration: InputDecoration(
+                        labelText: l10n.dosage,
                       ),
                       keyboardType: TextInputType.number,
                       validator: (v) =>
-                          v?.isEmpty ?? true ? 'Required' : null,
+                          v?.isEmpty ?? true ? l10n.required : null,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextFormField(
                       controller: _unitController,
-                      decoration: const InputDecoration(
-                        labelText: 'Unit (mg, ml)',
+                      decoration: InputDecoration(
+                        labelText: l10n.unit,
                       ),
                       validator: (v) =>
-                          v?.isEmpty ?? true ? 'Required' : null,
+                          v?.isEmpty ?? true ? l10n.required : null,
                     ),
                   ),
                 ],
@@ -247,8 +252,8 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
               const SizedBox(height: 16),
               DropdownButtonFormField<MedicationType>(
                 value: _type,
-                decoration: const InputDecoration(
-                  labelText: 'Type',
+                decoration: InputDecoration(
+                  labelText: l10n.type,
                 ),
                 items: MedicationType.values.map((type) {
                   return DropdownMenuItem(
@@ -261,8 +266,8 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
               const SizedBox(height: 16),
               DropdownButtonFormField<DoseFrequency>(
                 value: _frequency,
-                decoration: const InputDecoration(
-                  labelText: 'Frequency',
+                decoration: InputDecoration(
+                  labelText: l10n.frequency,
                 ),
                 items: DoseFrequency.values.map((freq) {
                   return DropdownMenuItem(
@@ -275,7 +280,7 @@ class _AddMedicationSheetState extends State<_AddMedicationSheet> {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _saveMedication,
-                child: const Text('Add Medication'),
+                child: Text(l10n.addMedication),
               ),
               const SizedBox(height: 16),
             ],

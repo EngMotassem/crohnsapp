@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../config/app_theme.dart';
@@ -12,10 +13,11 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final localeProvider = context.watch<LocaleProvider>();
     final isArabic = localeProvider.isArabic;
+    final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
       appBar: AppBar(
-        title: Text(isArabic ? 'الإعدادات' : 'Settings'),
+        title: Text(l10n.settings),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -31,7 +33,7 @@ class SettingsScreen extends StatelessWidget {
                       const Icon(Icons.language, color: AppTheme.primaryColor),
                       const SizedBox(width: 12),
                       Text(
-                        isArabic ? 'اللغة' : 'Language',
+                        l10n.language,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ],
@@ -64,8 +66,8 @@ class SettingsScreen extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.privacy_tip, color: AppTheme.primaryColor),
-              title: Text(isArabic ? 'إعدادات الخصوصية' : 'Privacy Settings'),
-              subtitle: Text(isArabic ? 'التحكم في من يمكنه رؤية بياناتك' : 'Control who can see your data'),
+              title: Text(l10n.privacySettingsTitle),
+              subtitle: Text(l10n.controlWhoCanSee),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.push(
@@ -79,17 +81,15 @@ class SettingsScreen extends StatelessWidget {
           Card(
             child: ListTile(
               leading: const Icon(Icons.info_outline, color: AppTheme.primaryColor),
-              title: Text(isArabic ? 'حول التطبيق' : 'About'),
-              subtitle: Text(isArabic ? 'الإصدار 1.0.0' : 'Version 1.0.0'),
+              title: Text(l10n.about),
+              subtitle: Text('${l10n.version} 1.0.0'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 showAboutDialog(
                   context: context,
-                  applicationName: isArabic ? 'تجربة كرون' : "Crohn's Experience",
+                  applicationName: l10n.appName,
                   applicationVersion: '1.0.0',
-                  applicationLegalese: isArabic 
-                      ? '© 2025 تجربة كرون. جميع الحقوق محفوظة.'
-                      : "© 2025 Crohn's Experience. All rights reserved.",
+                  applicationLegalese: l10n.allRightsReserved,
                 );
               },
             ),
@@ -100,19 +100,17 @@ class SettingsScreen extends StatelessWidget {
               final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(isArabic ? 'تسجيل الخروج' : 'Sign Out'),
-                  content: Text(isArabic 
-                      ? 'هل أنت متأكد أنك تريد تسجيل الخروج؟' 
-                      : 'Are you sure you want to sign out?'),
+                  title: Text(l10n.signOut),
+                  content: Text(l10n.areYouSureSignOut),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
-                      child: Text(isArabic ? 'إلغاء' : 'Cancel'),
+                      child: Text(l10n.cancel),
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(context, true),
                       child: Text(
-                        isArabic ? 'تسجيل الخروج' : 'Sign Out',
+                        l10n.signOut,
                         style: const TextStyle(color: AppTheme.errorColor),
                       ),
                     ),
@@ -126,7 +124,7 @@ class SettingsScreen extends StatelessWidget {
             },
             icon: const Icon(Icons.logout, color: AppTheme.errorColor),
             label: Text(
-              isArabic ? 'تسجيل الخروج' : 'Sign Out',
+              l10n.signOut,
               style: const TextStyle(color: AppTheme.errorColor),
             ),
           ),
