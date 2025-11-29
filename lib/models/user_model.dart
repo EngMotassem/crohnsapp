@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum UserRole { patient, clinician, researcher }
+enum UserRole { patient, clinician, researcher, admin }
 
 enum PrivacyLevel { private, anonymizedForResearch, sharedWithClinician }
 

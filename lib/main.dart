@@ -8,6 +8,7 @@ import 'providers/providers.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/patient/patient_home_screen.dart';
 import 'screens/clinician/clinician_dashboard_screen.dart';
+import 'screens/admin/admin_home_screen.dart';
 import 'screens/onboarding/language_selection_screen.dart';
 import 'models/user_model.dart';
 
@@ -114,14 +115,16 @@ class AuthWrapper extends StatelessWidget {
           return const LoginScreen();
         }
 
-        if (authProvider.user?.role == UserRole.patient) {
-          return const PatientHomeScreen();
-        } else if (authProvider.user?.role == UserRole.clinician ||
-            authProvider.user?.role == UserRole.researcher) {
-          return const ClinicianDashboardScreen();
-        }
+                if (authProvider.user?.role == UserRole.admin) {
+                  return const AdminHomeScreen();
+                } else if (authProvider.user?.role == UserRole.patient) {
+                  return const PatientHomeScreen();
+                } else if (authProvider.user?.role == UserRole.clinician ||
+                    authProvider.user?.role == UserRole.researcher) {
+                  return const ClinicianDashboardScreen();
+                }
 
-        return const LoginScreen();
+                return const LoginScreen();
       },
     );
   }

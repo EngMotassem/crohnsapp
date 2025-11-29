@@ -13,10 +13,11 @@ class AuthProvider extends ChangeNotifier {
   UserModel? get user => _user;
   bool get isLoading => _isLoading;
   String? get error => _error;
-  bool get isAuthenticated => _user != null;
-  bool get isPatient => _user?.role == UserRole.patient;
-  bool get isClinician => _user?.role == UserRole.clinician;
-  bool get isResearcher => _user?.role == UserRole.researcher;
+    bool get isAuthenticated => _user != null;
+    bool get isPatient => _user?.role == UserRole.patient;
+    bool get isClinician => _user?.role == UserRole.clinician;
+    bool get isResearcher => _user?.role == UserRole.researcher;
+    bool get isAdmin => _user?.role == UserRole.admin;
 
   AuthProvider() {
     _initAuthListener();
