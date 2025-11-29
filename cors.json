@@ -1,0 +1,13 @@
+[
+  {
+    "origin": [
+      "https://repo-access-app-nwkbv7ds.devinapps.com",
+      "http://localhost:5000",
+      "http://localhost:8080",
+      "http://localhost:3000"
+    ],
+    "method": ["GET", "HEAD", "PUT", "POST", "DELETE"],
+    "responseHeader": ["Content-Type", "x-goog-meta-*", "Authorization", "Content-Length", "User-Agent", "x-goog-resumable"],
+    "maxAgeSeconds": 3600
+  }
+]
