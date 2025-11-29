@@ -10,6 +10,7 @@ import 'video_diary_screen.dart';
 import 'narrative_screen.dart';
 import 'sibdq_screen.dart';
 import 'privacy_settings_screen.dart';
+import 'settings_screen.dart';
 
 class PatientHomeScreen extends StatefulWidget {
   const PatientHomeScreen({super.key});
@@ -577,13 +578,14 @@ class _ProfileTab extends StatelessWidget {
               child: Column(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.privacy_tip_outlined),
-                    title: const Text('Privacy Settings'),
+                    leading: const Icon(Icons.settings_outlined),
+                    title: const Text('Settings'),
+                    subtitle: const Text('Language, privacy, and more'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const PrivacySettingsScreen(),
+                        builder: (_) => const SettingsScreen(),
                       ),
                     ),
                   ),
