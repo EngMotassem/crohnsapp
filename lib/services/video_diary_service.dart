@@ -66,7 +66,7 @@ class VideoDiaryService {
     
     final diary = VideoDiary(
       id: '',
-      userId: userId,
+      oderId: userId,
       title: title,
       description: description,
       videoUrl: videoUrl,

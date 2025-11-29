@@ -199,12 +199,16 @@ class _RecordVideoDiarySheetState extends State<_RecordVideoDiarySheet> {
     switch (category) {
       case VideoDiaryCategory.dailyReflection:
         return 'تأمل يومي';
-      case VideoDiaryCategory.symptomUpdate:
-        return 'تحديث الأعراض';
+      case VideoDiaryCategory.flareExperience:
+        return 'تجربة النوبة';
+      case VideoDiaryCategory.copingStrategy:
+        return 'استراتيجية التأقلم';
+      case VideoDiaryCategory.emotionalState:
+        return 'الحالة النفسية';
       case VideoDiaryCategory.treatmentExperience:
         return 'تجربة العلاج';
-      case VideoDiaryCategory.emotionalWellbeing:
-        return 'الصحة النفسية';
+      case VideoDiaryCategory.milestone:
+        return 'إنجاز';
       case VideoDiaryCategory.other:
         return 'أخرى';
     }
