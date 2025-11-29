@@ -155,50 +155,78 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               final data = doc.data() as Map<String, dynamic>;
                               final sentAt = (data['sentAt'] as Timestamp?)?.toDate();
 
-                              return ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-                                  child: Icon(
-                                    Icons.notifications,
-                                    color: AppTheme.primaryColor,
-                                  ),
-                                ),
-                                title: Text(
-                                  data['title'] ?? '',
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(data['body'] ?? ''),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.people, size: 14, color: AppTheme.textLight),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          _getAudienceLabel(data['targetAudience'] ?? 'all', l10n),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.textLight,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Icon(Icons.access_time, size: 14, color: AppTheme.textLight),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          sentAt != null ? _formatDate(sentAt) : '',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppTheme.textLight,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                isThreeLine: true,
-                              );
+                                                            return ListTile(
+                                                              leading: CircleAvatar(
+                                                                backgroundColor: _getStatusColor(data['status']).withOpacity(0.1),
+                                                                child: Icon(
+                                                                  _getStatusIcon(data['status']),
+                                                                  color: _getStatusColor(data['status']),
+                                                                ),
+                                                              ),
+                                                              title: Text(
+                                                                data['title'] ?? '',
+                                                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                                              ),
+                                                              subtitle: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(data['body'] ?? ''),
+                                                                  const SizedBox(height: 4),
+                                                                  Row(
+                                                                    children: [
+                                                                      Icon(Icons.people, size: 14, color: AppTheme.textLight),
+                                                                      const SizedBox(width: 4),
+                                                                      Text(
+                                                                        _getAudienceLabel(data['targetAudience'] ?? 'all', l10n),
+                                                                        style: TextStyle(
+                                                                          fontSize: 12,
+                                                                          color: AppTheme.textLight,
+                                                                        ),
+                                                                      ),
+                                                                      const SizedBox(width: 16),
+                                                                      Icon(Icons.access_time, size: 14, color: AppTheme.textLight),
+                                                                      const SizedBox(width: 4),
+                                                                      Text(
+                                                                        sentAt != null ? _formatDate(sentAt) : '',
+                                                                        style: TextStyle(
+                                                                          fontSize: 12,
+                                                                          color: AppTheme.textLight,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  if (data['sentCount'] != null || data['status'] != null)
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.only(top: 4),
+                                                                      child: Row(
+                                                                        children: [
+                                                                          Icon(
+                                                                            data['status'] == 'sent' ? Icons.check_circle : 
+                                                                            data['status'] == 'error' ? Icons.error : Icons.pending,
+                                                                            size: 14,
+                                                                            color: _getStatusColor(data['status']),
+                                                                          ),
+                                                                          const SizedBox(width: 4),
+                                                                          Text(
+                                                                            data['status'] == 'sent' 
+                                                                                ? 'Sent to ${data['sentCount'] ?? 0} devices'
+                                                                                : data['status'] == 'error'
+                                                                                    ? 'Error: ${data['error'] ?? 'Unknown'}'
+                                                                                    : data['status'] == 'no_tokens'
+                                                                                        ? 'No devices to send to'
+                                                                                        : 'Pending...',
+                                                                            style: TextStyle(
+                                                                              fontSize: 12,
+                                                                              color: _getStatusColor(data['status']),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                ],
+                                                              ),
+                                                              isThreeLine: true,
+                                                            );
                             },
                           );
                         },
@@ -227,11 +255,37 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
-  }
+    String _formatDate(DateTime date) {
+      return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+    }
 
-  Future<void> _sendNotification(BuildContext context, AppLocalizations l10n) async {
+    Color _getStatusColor(String? status) {
+      switch (status) {
+        case 'sent':
+          return AppTheme.successColor;
+        case 'error':
+          return AppTheme.errorColor;
+        case 'no_tokens':
+          return AppTheme.warningColor;
+        default:
+          return AppTheme.primaryColor;
+      }
+    }
+
+    IconData _getStatusIcon(String? status) {
+      switch (status) {
+        case 'sent':
+          return Icons.check_circle;
+        case 'error':
+          return Icons.error;
+        case 'no_tokens':
+          return Icons.warning;
+        default:
+          return Icons.notifications;
+      }
+    }
+
+    Future<void> _sendNotification(BuildContext context, AppLocalizations l10n) async {
     if (_titleController.text.isEmpty || _bodyController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
