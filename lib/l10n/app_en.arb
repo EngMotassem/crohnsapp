@@ -406,5 +406,12 @@
   "translations": "Translations",
   "users": "Users",
   "statistics": "Statistics",
-  "exportData": "Export Data"
+  "exportData": "Export Data",
+  
+  "youtubeUrl": "YouTube URL",
+  "pleaseEnterYoutubeUrl": "Please enter a YouTube URL",
+  "invalidYoutubeUrl": "Please enter a valid YouTube URL",
+  "pasteYoutubeLink": "Paste your YouTube video link here",
+  "watchVideo": "Watch Video",
+  "openInYoutube": "Open in YouTube"
 }

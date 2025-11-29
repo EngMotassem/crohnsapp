@@ -406,5 +406,12 @@
   "translations": "الترجمات",
   "users": "المستخدمين",
   "statistics": "الإحصائيات",
-  "exportData": "تصدير البيانات"
+  "exportData": "تصدير البيانات",
+  
+  "youtubeUrl": "رابط يوتيوب",
+  "pleaseEnterYoutubeUrl": "الرجاء إدخال رابط يوتيوب",
+  "invalidYoutubeUrl": "الرجاء إدخال رابط يوتيوب صحيح",
+  "pasteYoutubeLink": "الصق رابط فيديو يوتيوب هنا",
+  "watchVideo": "مشاهدة الفيديو",
+  "openInYoutube": "فتح في يوتيوب"
 }

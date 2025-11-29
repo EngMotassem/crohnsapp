@@ -83,6 +83,33 @@ class VideoDiaryService {
     await addVideoDiary(diary);
   }
 
+  // Create video diary from YouTube URL (no Firebase Storage upload)
+  Future<void> createVideoDiaryFromYoutube({
+    required String userId,
+    required String title,
+    required String description,
+    required VideoDiaryCategory category,
+    required String youtubeUrl,
+  }) async {
+    final diary = VideoDiary(
+      id: '',
+      oderId: userId,
+      title: title,
+      description: description,
+      videoUrl: youtubeUrl,
+      thumbnailUrl: null,
+      durationSeconds: 0,
+      category: category,
+      timestamp: DateTime.now(),
+      isProcessed: false,
+      aiGeneratedTags: [],
+      transcription: null,
+      sentimentAnalysis: null,
+    );
+    
+    await addVideoDiary(diary);
+  }
+
   Future<void> updateVideoDiary(VideoDiary diary) async {
     await _firestore.collection(_collection).doc(diary.id).update(diary.toFirestore());
   }
